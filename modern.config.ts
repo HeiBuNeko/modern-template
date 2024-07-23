@@ -5,6 +5,9 @@ export default defineConfig({
   runtime: {
     router: true,
   },
+  server: {
+    ssr: true,
+  },
   plugins: [
     appTools({
       bundler: 'experimental-rspack',
