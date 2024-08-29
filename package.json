@@ -17,7 +17,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs}": [
-      "node --max_old_space_size=8192 ./node_modules/eslint/bin/eslint.js --fix --color --cache --quiet"
+      "pnpm biome check --write --no-errors-on-unmatched --files-ignore-unknown=true"
     ]
   },
   "eslintIgnore": [
@@ -25,22 +25,22 @@
     "dist/"
   ],
   "dependencies": {
-    "@modern-js/runtime": "2.58.1",
+    "@modern-js/runtime": "2.58.2",
     "react": "~18.2.0",
     "react-dom": "~18.2.0"
   },
   "devDependencies": {
-    "@modern-js-app/eslint-config": "2.58.1",
-    "@modern-js/app-tools": "2.58.1",
-    "@modern-js/eslint-config": "2.58.1",
-    "@modern-js/tsconfig": "2.58.1",
+    "@biomejs/biome": "^1.8.3",
+    "@modern-js-app/eslint-config": "2.58.2",
+    "@modern-js/app-tools": "2.58.2",
+    "@modern-js/eslint-config": "2.58.2",
+    "@modern-js/tsconfig": "2.58.2",
     "@types/jest": "~29.2.6",
     "@types/node": "~16.11.68",
     "@types/react": "~18.0.38",
     "@types/react-dom": "~18.0.11",
     "husky": "~8.0.3",
     "lint-staged": "~13.1.4",
-    "prettier": "~2.8.8",
     "rimraf": "~3.0.2",
     "typescript": "~5.0.4"
   }
