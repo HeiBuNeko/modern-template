@@ -5,7 +5,13 @@
     "dev": "modern dev",
     "build": "modern build",
     "serve": "modern serve",
-    "lint": "biome check"
+    "lint": "biome check",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc,css}": [
+      "biome check --files-ignore-unknown=true"
+    ]
   },
   "engines": {
     "node": ">=20"
@@ -19,6 +25,9 @@
     "@modern-js/app-tools": "3.7.0",
     "@modern-js/tsconfig": "3.7.0",
     "@biomejs/biome": "1.9.4",
+    "cross-env": "^10.1.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.3.0",
     "typescript": "~5.7.3",
     "@types/node": "^20",
     "@types/react": "^19.1.8",
