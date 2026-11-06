@@ -1,0 +1,91 @@
+
+name: Sync Modern.js
+
+on:
+  schedule:
+    - cron: "0 10 * * 0"
+      timezone: "Asia/Shanghai"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: sync-modernjs
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+          cache: pnpm
+
+      - name: Generate Modern.js scaffold and install dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          scaffold_parent="$(mktemp -d)"
+          scaffold="$scaffold_parent/modernjs-template"
+
+          # Generate the latest official Modern.js project
+          pnpm dlx @modern-js/create@latest "$scaffold"
+
+          # Install dependencies and approve all pending build scripts
+          cd "$scaffold"
+          pnpm install
+          pnpm approve-builds --all
+
+          # Sync the generated project into the repository root
+          rsync -a --delete \
+            --exclude='.git/' \
+            --exclude='.github/workflows/' \
+            --exclude='node_modules/' \
+            "$scaffold/" "$GITHUB_WORKSPACE/"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          branch: chore/sync-modernjs
+          delete-branch: true
+          commit-message: "chore: sync Modern.js@latest"
+          title: "chore: sync Modern.js@latest"
+          body: |
+            ## Sync Modern.js
+
+            自动同步最新官方 Modern.js 脚手架。
+
+            执行命令：
+
+            ```bash
+            pnpm dlx @modern-js/create@latest <目录>
+            pnpm install
+            pnpm approve-builds --all
+            ```
+
+            同步范围：
+            - 完整项目文件
+            - package.json
+            - pnpm-lock.yaml
+            - pnpm-workspace.yaml
+            - Modern.js 官方配置文件
+            - 示例页面及资源
+
+            保留：
+            - .github/workflows/
+
+            请检查依赖变化、构建结果和配置变更后再合并。
