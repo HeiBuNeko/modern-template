@@ -34,19 +34,17 @@ jobs:
           node-version: lts/*
           cache: pnpm
 
-      - name: Generate Modern.js scaffold and install dependencies
+      - name: Generate Modern.js tmp_dir and install dependencies
         shell: bash
         run: |
           set -euo pipefail
 
-          scaffold_parent="$(mktemp -d)"
-          scaffold="$scaffold_parent/modernjs-template"
-
           # Generate the latest official Modern.js project
-          pnpm dlx @modern-js/create@latest "$scaffold"
+          tmp_dir="$(mktemp -d)"
+          cd "$tmp_dir"
+          pnpm dlx @modern-js/create@latest modern-template
 
           # Install dependencies and approve all pending build scripts
-          cd "$scaffold"
           pnpm install --config.strictDepBuilds=false
           pnpm approve-builds --all
 
@@ -55,7 +53,7 @@ jobs:
             --exclude='.git/' \
             --exclude='.github/workflows/' \
             --exclude='node_modules/' \
-            "$scaffold/" "$GITHUB_WORKSPACE/"
+            "$tmp_dir/modern-template/" "$GITHUB_WORKSPACE/"
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v8
@@ -72,7 +70,7 @@ jobs:
             执行命令：
 
             ```bash
-            pnpm dlx @modern-js/create@latest <目录>
+            pnpm dlx @modern-js/create@latest modern-template
             pnpm install --config.strictDepBuilds=false
             pnpm approve-builds --all
             ```
