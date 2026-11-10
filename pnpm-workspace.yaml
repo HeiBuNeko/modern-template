@@ -1,3 +1,6 @@
 allowBuilds:
   '@swc/core': true
   core-js: true
+minimumReleaseAgeExclude:
+  - '@modern-js/app-tools@3.11.2'
+  - '@modern-js/utils@3.11.2'
