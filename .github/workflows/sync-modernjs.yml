@@ -45,13 +45,14 @@ jobs:
           pnpm dlx @modern-js/create@latest modern-template
 
           # Install dependencies and approve all pending build scripts
+          cd modern-template
           pnpm install --config.strictDepBuilds=false
           pnpm approve-builds --all
 
           # Sync the generated project into the repository root
           rsync -a --delete \
             --exclude='.git/' \
-            --exclude='.github/workflows/' \
+            --exclude='.github/' \
             --exclude='node_modules/' \
             "$tmp_dir/modern-template/" "$GITHUB_WORKSPACE/"
 
