@@ -47,7 +47,7 @@ jobs:
 
           # Install dependencies and approve all pending build scripts
           cd "$scaffold"
-          pnpm install
+          pnpm install --config.strictDepBuilds=false
           pnpm approve-builds --all
 
           # Sync the generated project into the repository root
@@ -73,7 +73,7 @@ jobs:
 
             ```bash
             pnpm dlx @modern-js/create@latest <目录>
-            pnpm install
+            pnpm install --config.strictDepBuilds=false
             pnpm approve-builds --all
             ```
 
